@@ -1,0 +1,69 @@
+version: 2
+
+models:
+  - name: stg_production_brands
+    description: "Table containing information on the brands."
+    columns: 
+      - name: brand_id
+        description: "Primary key, unique identifier for each brand."
+        tests:
+            - unique
+            - not_null
+      - name: brand_name
+        description: "Primary key, unique identifier for each brand."
+        tests:
+          - unique
+  
+  - name: stg_production_category
+    description: "Table containing information on the prodcuts categories."
+    columns:
+      - name: category_id
+        description: "Primary key, unique identifier for each category."
+        tests:
+          - unique
+          - not_null
+      - name: category_name
+        description: "The name of the category."
+
+  - name: stg_production_products
+    description: "Table containing information on the products."
+    columns:
+      - name: product_id
+        description: "Primary key, unique identifier for each product."
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "The name of the product"
+      - name: brand_id
+        description: "Foreign key, unique identifier for each brand."
+        tests:
+          - relationships:
+              to: ref('stg_production_brands')
+              field: brand_id
+      - name: category_id
+        description: "Foreign key, unique identifier for each categorie."
+        tests:
+          - relationships:
+              to: ref('stg_production_category')
+              field: category_id
+      - name: model_year
+        description: "The year of that model of the product."
+      - name: list_price
+        description: "The price listed for the product."
+        tests:
+          - dbt_utils.expression_is_true:
+            expression: ">= 0"
+
+  - name: stg_production_stocks
+    description: "Table containing information on how many of each product each store has in store."
+    columns:
+      - name: store_id
+        description: "Foreign key, unique identifier for each store."
+      - name: product_id
+        description: "Foreign key, unique identifier for each product."
+      - name: quantity
+        description: "The quantity of that product in that store stock."
+        tests:
+          - dbt_utils.expression_is_true:
+            expression: ">= 0"

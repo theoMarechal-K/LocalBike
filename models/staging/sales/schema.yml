@@ -1,0 +1,151 @@
+version: 2
+
+models:
+  
+  - name: stg_sales_customer
+    description: "Table containing information on the customers."
+    columns:
+      - name: customer_id
+        description: "Primary key, unique identifier for each client."
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: "The first name of the customer."
+      - name: last_name
+        description: "The last name of the customer."
+      - name: phone
+        description: "The phone number of the customer."
+      - name: email
+        description: "The email of the customer."
+      - name: street
+        description: "The street the customer lives on."
+      - name: city
+        description: "The city the customer lives in."
+      - name: state
+        description: "The state the customer lives in."
+      - name: zip_code
+        description: "The ZIP Code the customer lives in."
+
+  - name: stg_sales_orders
+    description: "Table containing information on the orders."
+    columns:
+      - name: order_id
+        description: "Primary key, unique identifier for each order."
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Foreign key, unique identifier for each customer."
+        tests:
+          - relationships:
+              to: ref('stg_sales_customer')
+              field: customer_id
+      - name: order_status
+        description: "The status of the order."
+      - name: order_date
+        description: "The date of the order."
+      - name: required_date
+        description: "The date at which the order is required."
+      - name: shipped_date
+        description: "The date at which the order shipped."
+      - name: store_id
+        description: "Foreign key, unique identifier for each store."
+        tests:
+          - relationships:
+              to: ref('stg_sales_stores')
+              field: store_id
+      - name: staff_id
+        description: "Foreign key, unique identifier for each staff member."
+        tests:
+          - relationships:
+              to: ref('stg_sales_staffs')
+              field: staff_id
+  
+  - name: stg_sales_order_items
+    description: "Table containing more information on the order."
+    columns:
+      - name: order_id
+        description: "Primary key, unique identifier for each client."
+        tests:
+          - relationships:
+              to: ref('stg_sales_orders')
+              field: order_id
+      - name: item_id
+        description: "Foreign key, unique identifier for each item."
+        tests:
+          - relationships:
+              to: ref('stg_sales_stores')
+              field: item_id
+      - name: product_id
+        description: "Foreign key, unique identifier for each product."
+        tests:
+          - relationships:
+              to: ref('stg_production_products')
+              field: product_id
+      - name: quantity
+        description: "The quantity of item in the order."
+        tests:
+          - dbt_utils.expression_is_true:
+            expression: ">= 0"
+      - name: list_price
+        description: "The price of the item in the order."
+        tests:
+          - dbt_utils.expression_is_true:
+            expression: ">= 0"
+      - name: discount
+        description: "The discount on the order."
+
+  - name: stg_sales_staffs
+    description: "Table containing information on the staff."
+    columns:
+      - name: staff_id
+        description: "Primary key, unique identifier for each staff member."
+      - name: first_name
+        description: "The first name of the staff member."
+      - name: last_name
+        description: "The last name of the staff member."
+      - name: email
+        description: "The email of the staff member"
+      - name: phone
+        description: "The phone number of the staff member."
+      - name: active
+        description: "Wether the staff member is still actif or not."
+        tests:
+          - accepted_values:
+            values: [1, 2]
+      - name: store_id
+        description: "Foreign key, unique identifier for each store."
+        tests:
+          - relationships:
+              to: ref('stg_sales_stores')
+              field: store_id
+      - name: manager_id
+        description: "Foreign key (primary key of this table), unique identifier for each manager (manager is a staff member)."
+        tests:
+          - relationships:
+              to: ref('stg_sales_staffs')
+              field: manager_id
+  
+  - name: stg_sales_stores
+    description: "Table containing information on the stores."
+    columns:
+      - name: store_id
+        description: "Primary key, unique identifier for each store."
+        tests:
+          - unique
+          - not_null
+      - name: store_name
+        description: "The name of the store."
+      - name: phone
+        description: "The phone number of the store."
+      - name: email
+        description: "The email of the store."
+      - name: street
+        description: "The street the store is on."
+      - name: city
+        description: "The city the store is in."
+      - name: state
+        description: "The state the store is in."
+      - name: zip_code
+        description: "The Zip code the store is on."
