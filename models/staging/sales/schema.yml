@@ -2,7 +2,7 @@ version: 2
 
 models:
   
-  - name: stg_sales_customer
+  - name: stg_sales_customers
     description: "Table containing information on the customers."
     columns:
       - name: customer_id
@@ -65,18 +65,19 @@ models:
   - name: stg_sales_order_items
     description: "Table containing more information on the order."
     columns:
+      - name: order_item_id
+        description: "Primary key, unique identifier for each order/item pair."
+        tests:
+          - unique
+          - not_null
       - name: order_id
-        description: "Primary key, unique identifier for each client."
+        description: "Foreign key, unique identifier for each order."
         tests:
           - relationships:
               to: ref('stg_sales_orders')
               field: order_id
       - name: item_id
-        description: "Foreign key, unique identifier for each item."
-        tests:
-          - relationships:
-              to: ref('stg_sales_stores')
-              field: item_id
+        description: "Identifier for each item."
       - name: product_id
         description: "Foreign key, unique identifier for each product."
         tests:
@@ -87,12 +88,12 @@ models:
         description: "The quantity of item in the order."
         tests:
           - dbt_utils.expression_is_true:
-            expression: ">= 0"
+              expression: '>= 0'
       - name: list_price
         description: "The price of the item in the order."
         tests:
           - dbt_utils.expression_is_true:
-            expression: ">= 0"
+              expression: '>= 0'
       - name: discount
         description: "The discount on the order."
 
@@ -110,10 +111,7 @@ models:
       - name: phone
         description: "The phone number of the staff member."
       - name: active
-        description: "Wether the staff member is still actif or not."
-        tests:
-          - accepted_values:
-            values: [1, 2]
+        description: "Whether the staff member is still actif or not."
       - name: store_id
         description: "Foreign key, unique identifier for each store."
         tests:

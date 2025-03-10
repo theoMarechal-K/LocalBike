@@ -14,7 +14,7 @@ models:
         tests:
           - unique
   
-  - name: stg_production_category
+  - name: stg_production_categories
     description: "Table containing information on the prodcuts categories."
     columns:
       - name: category_id
@@ -45,7 +45,7 @@ models:
         description: "Foreign key, unique identifier for each categorie."
         tests:
           - relationships:
-              to: ref('stg_production_category')
+              to: ref('stg_production_categories')
               field: category_id
       - name: model_year
         description: "The year of that model of the product."
@@ -53,17 +53,30 @@ models:
         description: "The price listed for the product."
         tests:
           - dbt_utils.expression_is_true:
-            expression: ">= 0"
+              expression: '>= 0'
 
   - name: stg_production_stocks
     description: "Table containing information on how many of each product each store has in store."
     columns:
+      - name: stocks_id
+        description: "Primary key, unique identifier for each store/product pair."
+        tests:
+          - unique
+          - not_null
       - name: store_id
         description: "Foreign key, unique identifier for each store."
+        tests:
+          - relationships:
+              to: ref('stg_sales_stores')
+              field: store_id
       - name: product_id
         description: "Foreign key, unique identifier for each product."
+        tests:
+          - relationships:
+              to: ref('stg_production_products')
+              field: product_id
       - name: quantity
         description: "The quantity of that product in that store stock."
         tests:
           - dbt_utils.expression_is_true:
-            expression: ">= 0"
+              expression: '>= 0'
