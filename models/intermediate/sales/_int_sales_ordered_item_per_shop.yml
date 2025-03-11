@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  
+  - name: int_sales_ordered_item_per_shop
+    description: "Table containing information on the customers."
+    columns:
+      - name: store_id
+        description: "Primary key, unique identifier for each client."
+      - name: store_name
+      - name: city
+      - name: state
+      - name: order_id
+      - name: product_id
+      - name: quantity
+      - name: price
