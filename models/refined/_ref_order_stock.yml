@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  
+  - name: ref_order_stock
+    description: "Table containing information on the customers."
+    columns:
+      - name: store_id
+        description: "Primary key, unique identifier for each store."
+      - name: store_name
+        description: "The name of the store."
+      - name: product_id
+        description: "The id of the product."
+      - name: order_quantity
+        description: "The quantity of the product ordered at that store."
+      - name: stocks_quantity
+        description: "The quantity of the product in stock at that store."

@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  
+  - name: ref_store_benefices
+    description: "Table containing information on the customers."
+    columns:
+      - name: store_id
+        description: "Primary key, unique identifier for each store."
+      - name: store_name
+        description: "The name of the store."
+      - name: order_sales
+        description: "The total sales made throught order at that store."
+      - name: stocks_price
+        description: "The total pricre of all product in that store store."
